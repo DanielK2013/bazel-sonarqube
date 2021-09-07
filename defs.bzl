@@ -97,7 +97,7 @@ def _test_report_path(parent_path, test_target):
     return parent_path + "bazel-testlogs/" + test_target.package + "/" + test_target.name
 
 def _sonarqube_impl(ctx):
-    sq_properties_file = ctx.actions.declare_file("sonar-project.properties")
+    sq_properties_file = ctx.actions.declare_file(ctx.attr.sq_properties_filename)
 
     local_runfiles = _build_sonar_project_properties(ctx, sq_properties_file)
 
@@ -162,6 +162,7 @@ def sonarqube(
         modules = {},
         sonar_scanner = "@bazel_sonarqube//:sonar_scanner",
         sq_properties_template = "@bazel_sonarqube//:sonar-project.properties.tpl",
+        sq_properties = "sonar-project.properties",
         tags = [],
         visibility = []):
     """A runnable rule to execute SonarQube analysis.
@@ -227,7 +228,7 @@ def sonarqube(
         coverage_report = coverage_report,
         sonar_scanner = sonar_scanner,
         sq_properties_template = sq_properties_template,
-        sq_properties = "sonar-project.properties",
+        sq_properties = sq_properties,
         tags = tags,
         visibility = visibility,
     )
